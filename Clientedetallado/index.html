@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Tareas</title>
+    <style>
+        /* Estilos básicos para mejorar la apariencia */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #taskList {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Tareas</h1>
+    <input type="text" id="taskInput" placeholder="Nueva tarea">
+    <button onclick="addTask()">Agregar Tarea</button>
+    <ul id="taskList"></ul>
+
+    <script>
+        // Función para agregar una nueva tarea
+        function addTask() {
+            const taskInput = document.getElementById('taskInput');
+            const task = taskInput.value;
+            
+            if (task) {
+                // Enviar la tarea al servidor
+                fetch('/tasks', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ task }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    taskInput.value = ''; // Limpiar el input
+                    getTasks(); // Actualizar la lista de tareas
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+        }
+
+        // Función para obtener y mostrar las tareas
+        function getTasks() {
+            fetch('/tasks')
+                .then(response => response.json())
+                .then(tasks => {
+                    const taskList = document.getElementById('taskList');
+                    taskList.innerHTML = ''; // Limpiar la lista actual
+                    tasks.forEach(task => {
+                        const li = document.createElement('li');
+                        li.textContent = task;
+                        taskList.appendChild(li);
+                    });
+                });
+        }
+
+        // Cargar las tareas al iniciar la página
+        getTasks();
+    </script>
+</body>
+</html>
