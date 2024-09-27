@@ -72,7 +72,7 @@ Posibles mejoras:
 - Implementar paginación para manejar grandes cantidades de tareas.
 - Agregar validación de datos tanto en el cliente como en el servidor.
 
-Fin...
+
 
 
 
